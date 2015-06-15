@@ -131,7 +131,7 @@ class EPGImportConfig(ConfigListScreen,Screen):
 		self["key_green"] = Button(_("Ok"))
 		self["key_yellow"] = Button(_("Manual"))
 		self["key_blue"] = Button(_("Sources"))
-		self["setupActions"] = ActionMap(["SetupActions", "ColorActions", "TimerEditActions"],
+		self["setupActions"] = ActionMap(["SetupActions", "ColorActions", "TimerEditActions", "MenuActions"],
 		{
 			"red": self.cancel,
 			"green": self.save,
@@ -141,6 +141,7 @@ class EPGImportConfig(ConfigListScreen,Screen):
 			"cancel": self.cancel,
 			"ok": self.save,
 			"log": self.showLog,
+			"menu": self.cancel,
 		}, -2)
 		self.lastImportResult = None
 		self.onChangedEntry = []
@@ -268,7 +269,7 @@ class EPGImportSources(Screen):
 			for x in EPGConfig.enumSources(CONFIG_PATH, filter=None)
 			]
 		self["list"] = SelectionList(sources)
-		self["setupActions"] = ActionMap(["SetupActions", "ColorActions"],
+		self["setupActions"] = ActionMap(["SetupActions", "ColorActions", "MenuActions"],
 		{
 			"red": self.cancel,
 			"green": self.save,
@@ -276,6 +277,7 @@ class EPGImportSources(Screen):
 			"save": self.save,
 			"cancel": self.cancel,
 			"ok": self["list"].toggleSelection,
+			"menu": self.cancel,
 		}, -2)
 
 	def save(self):
@@ -317,7 +319,7 @@ class EPGImportLog(Screen):
 		self["key_yellow"] = Button()
 		self["key_blue"] = Button(_("Save"))
 		self["list"] = ScrollLabel(log.getvalue())
-		self["actions"] = ActionMap(["DirectionActions", "OkCancelActions", "ColorActions"],
+		self["actions"] = ActionMap(["DirectionActions", "OkCancelActions", "ColorActions", "MenuActions"],
 		{
 			"red": self.clear,
 			"green": self.cancel,
@@ -331,7 +333,8 @@ class EPGImportLog(Screen):
 			"up": self["list"].pageUp,
 			"down": self["list"].pageDown,
 			"pageUp": self["list"].pageUp,
-			"pageDown": self["list"].pageDown
+			"pageDown": self["list"].pageDown,
+			"menu": self.cancel,
 		}, -2)
 
 	def save(self):
@@ -510,7 +513,7 @@ pluginlist = PluginDescriptor(name=_("EPGImport"), description = description, wh
 
 def epgmenu(menuid, **kwargs):
 	if menuid == "epg":
-		return [("EPGImport", main, "xmltvimporter", 1002)]
+		return [("EPGImport", main, "xmltvimporter", None)]
 	else:
 		return []
 
