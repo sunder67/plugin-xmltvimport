@@ -38,10 +38,11 @@ def calcDefaultStarttime():
 
 #Set default configuration
 config.plugins.epgimport = ConfigSubsection()
-config.plugins.epgimport.enabled = ConfigEnableDisable(default = True)
+config.plugins.epgimport.enabled = ConfigEnableDisable(default = False)
 config.plugins.epgimport.runboot = ConfigEnableDisable(default = False)
+config.plugins.epgimport.wakeupsleep = ConfigEnableDisable(default = False)
 config.plugins.epgimport.wakeup = ConfigClock(default = calcDefaultStarttime())
-config.plugins.epgimport.showinextensions = ConfigYesNo(default = True)
+config.plugins.epgimport.showinextensions = ConfigYesNo(default = False)
 config.plugins.epgimport.deepstandby = ConfigSelection(default = "skip", choices = [
 		("wakeup", _("Wake up and import")),
 #		("later", _("Import on next boot")),
@@ -114,7 +115,8 @@ class EPGImportConfig(ConfigListScreen,Screen):
 		cfg = config.plugins.epgimport
 		self.list = [
 			getConfigListEntry(_("Daily automatic import"), cfg.enabled),
-			getConfigListEntry(_("Automatic start time"), cfg.wakeup),   
+			getConfigListEntry(_("Automatic start time"), cfg.wakeup),
+			getConfigListEntry(_("Standby at startup"), cfg.wakeupsleep),
 			getConfigListEntry(_("When in deep standby"), cfg.deepstandby),
 			getConfigListEntry(_("Show in extensions"), cfg.showinextensions),
 			getConfigListEntry(_("Start import after booting up"), cfg.runboot),
