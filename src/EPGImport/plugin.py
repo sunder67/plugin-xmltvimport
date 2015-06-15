@@ -42,6 +42,7 @@ config.plugins.epgimport.enabled = ConfigEnableDisable(default = False)
 config.plugins.epgimport.runboot = ConfigEnableDisable(default = False)
 config.plugins.epgimport.wakeupsleep = ConfigEnableDisable(default = False)
 config.plugins.epgimport.wakeup = ConfigClock(default = calcDefaultStarttime())
+config.plugins.epgimport.showinplugins = ConfigYesNo(default = False)
 config.plugins.epgimport.showinextensions = ConfigYesNo(default = False)
 config.plugins.epgimport.deepstandby = ConfigSelection(default = "skip", choices = [
 		("wakeup", _("Wake up and import")),
@@ -118,6 +119,7 @@ class EPGImportConfig(ConfigListScreen,Screen):
 			getConfigListEntry(_("Automatic start time"), cfg.wakeup),
 			getConfigListEntry(_("Standby at startup"), cfg.wakeupsleep),
 			getConfigListEntry(_("When in deep standby"), cfg.deepstandby),
+			getConfigListEntry(_("Show in plugins"), cfg.showinplugins),
 			getConfigListEntry(_("Show in extensions"), cfg.showinextensions),
 			getConfigListEntry(_("Start import after booting up"), cfg.runboot),
 			getConfigListEntry(_("Load long descriptions up to X days"), cfg.longDescDays)
@@ -469,6 +471,12 @@ def autostart(reason, session=None, **kwargs):
 				os.remove("/tmp/enigmastandby")
 			except:
 				pass
+		else:
+			if config.plugins.epgimport.deepstandby.value == 'wakeup':
+				if config.plugins.epgimport.wakeupsleep.value:
+					print>>log, "[EPGImport] Returning to standby"
+					from Tools import Notifications
+					Notifications.AddNotification(Screens.Standby.Standby)
 	else:
 		print>>log, "[EPGImport] Stop"
 		#if autoStartTimer:
@@ -498,6 +506,13 @@ def housekeepingExtensionsmenu(el):
 description = _("Automated EPG Importer")
 config.plugins.epgimport.showinextensions.addNotifier(housekeepingExtensionsmenu, initial_call = False, immediate_feedback = False)
 extDescriptor = PluginDescriptor(name="EPGImport", description = description, where = PluginDescriptor.WHERE_EXTENSIONSMENU, fnc = extensionsmenu)
+pluginlist = PluginDescriptor(name="EPGImport", description = description, where = PluginDescriptor.WHERE_PLUGINMENU, icon = 'plugin.png', fnc = main)
+
+def epgmenu(menuid, **kwargs):
+	if menuid == "epg":
+		return [("EPGImport", main, "xmltvimporter", 1002)]
+	else:
+		return []
 
 def Plugins(**kwargs):
 	result = [
@@ -515,11 +530,12 @@ def Plugins(**kwargs):
 		PluginDescriptor(
 			name="EPGImport",
 			description = description,
-			where = PluginDescriptor.WHERE_PLUGINMENU,
-			icon = 'plugin.png',
-			fnc = main
+			where = PluginDescriptor.WHERE_MENU,
+			fnc = epgmenu
 		),
 	]
 	if config.plugins.epgimport.showinextensions.value:
 		result.append(extDescriptor)
+	if config.plugins.epgimport.showinplugins.value:
+		result.append(pluginlist)
 	return result
