@@ -222,7 +222,10 @@ class EPGImportConfig(ConfigListScreen,Screen):
 		# Called with True and list of config items on Okay.
 		print>>log, "sourcesDone(): ", confirmed, sources
 		pass
-		
+		import glob
+		for filename in glob.glob('/tmp/*.xml'):
+			os.remove(filename)
+
 	def showLog(self):
 		self.session.open(EPGImportLog)
 
