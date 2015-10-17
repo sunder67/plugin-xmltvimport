@@ -9,7 +9,7 @@ msgstr ""
 "POT-Creation-Date: 2013-12-15 22:57+0100\n"
 "PO-Revision-Date: 2015-10-17 13:34+0300\n"
 "Last-Translator: Hasan Kiran <Sunder67@hotmail.com>\n"
-"Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
+"Language-Team: Turkish <Sunder67@hotmail.com>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: plugin.py:34
 msgid "Skip the import"
-msgstr ""
+msgstr "İçeri aktarmayı atla"
 
 #: plugin.py:98
 msgid "EPG Import Configuration"
